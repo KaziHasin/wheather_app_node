@@ -1,0 +1,9 @@
+                                                                                                      weather api
+1. https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Kolkata/?key=CPHC9J6WCKE4NYTHJMA3FKQMP
+2.https://api.openweathermap.org/data/2.5/weather?q=Kolkata&appid=45c5ae45a6669d5736c7b8d7d35a7d9a
+
+
+
+3.time api google 
+
+AIzaSyDITxS1C5G4ZvNcwMrLbrhKGrDv0oacTRA

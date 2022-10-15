@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="search-box">
+            <input type="text" id="city_serch" placeholder="Type City" onKeyUp="showResults(this.value)">
+            <ul id="auto_City">
+
+            </ul>
+
+        </div>
+
+        <div class="content-box">
+
+
+            <div class="location-time-box">
+
+                <div class="location">
+                    {%cityName%},</div>
+                <div class="date-time">
+                    March 3rd, 2022 | Saturday 10:30PM
+                </div>
+
+            </div>
+
+
+            <div class="image-box" data-id="{%icon%}">
+                <div class="weather-report">{%temPerature%} <sup>&#176;C</sup>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+    </div>
+
+    <script>
+        const dateTime = document.querySelector(".date-time");
+        let loadDate = () => {
+            const today = new Date()
+            const textMonth = today.toLocaleString('default', {
+                month: 'long'
+            })
+
+            const nth = function(d) {
+                if (d > 3 && d < 21) return d + 'th';
+                switch (d % 10) {
+                    case 1:
+                        return d + "st";
+                    case 2:
+                        return d + "nd";
+                    case 3:
+                        return d + "rd";
+                    default:
+                        return d + "th";
+                }
+            }
+            const getDate = today.getDate();
+
+            const textDate = nth(getDate);
+
+            const textYear = today.getFullYear();
+
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            const textDay = days[today.getDay()];
+
+            const getHour = today.getHours();
+            const getMinute = today.getMinutes();
+
+
+
+            let textHour = getHour < 10 ? "0" + getHour : getHour;
+            textHour = getHour < 12 ? getHour : getHour - 12;
+            let textMinute = getMinute < 10 ? "0" + getMinute : getMinute;
+            let timeFormat = getHour < 12 ? "AM" : "PM";
+
+            const fullDateTime = `${textMonth} ${textDate}, &nbsp;${textYear} | ${textDay} ${textHour}:${textMinute}${timeFormat}`;
+
+
+            dateTime.innerHTML = fullDateTime;
+
+        }
+        loadDate();
+
+
+
+        // icon show 
+
+        const iconText = document.querySelector(".image-box").getAttribute('data-id');
+        const rainIcon = iconText.includes("rain");
+
+        if (rainIcon) {
+            let getIconTag = document.querySelector(".image-box");
+
+            let iconEle = `<i class="fa-solid fa-cloud-rain"></i>`;
+
+            getIconTag.insertAdjacentHTML('afterbegin', iconEle);
+
+        }
+
+        const cloudIcon = iconText.includes("cloudy");
+
+        if (cloudIcon) {
+            let getIconTag = document.querySelector(".image-box");
+
+            let iconEle = `<i class="fa-solid fa-cloud"></i>`;
+
+            getIconTag.insertAdjacentHTML('afterbegin', iconEle);
+
+        }
+
+        const sunIcon = iconText.includes("clear");
+
+        if (sunIcon) {
+            let getIconTag = document.querySelector(".image-box");
+
+            let iconEle = `<i class="fa-solid fa-sun"></i>`;
+
+            getIconTag.insertAdjacentHTML('afterbegin', iconEle);
+
+        }
+
+
+
+        // searching city
+        var search_terms = ['apple', 'apple watch', 'apple macbook', 'apple macbook pro', 'iphone', 'iphone 12'];
+        let res;
+        let city_serch;
+
+        function autocompleteMatch(input) {
+            if (input == '') {
+                return [];
+            }
+            var reg = new RegExp(input)
+            return search_terms.filter(function(term) {
+                if (term.match(reg)) {
+                    return term;
+                }
+            });
+        }
+
+        function showResults(val) {
+            res = document.getElementById("auto_City");
+            res.innerHTML = '';
+            let list = '';
+            let terms = autocompleteMatch(val);
+            for (i = 0; i < terms.length; i++) {
+                list += '<li>' + terms[i] + '</li>';
+            }
+            res.innerHTML = list;
+
+            const searchLI = document.querySelectorAll("#auto_City li");
+
+            searchLI.forEach((data) => {
+
+                data.addEventListener("click", function() {
+
+                    city_serch = document.getElementById("city_serch");
+
+                    city_serch.value = this.innerHTML;
+
+                    res.innerHTML = '';
+
+                    let serachTerms = city_serch.value;
+
+                    const result = fetch(`/`, {
+                        method: "post",
+                        body: JSON.stringify(serachTerms),
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                        },
+                    });
+                });
+
+            })
+
+        }
+
+
+
+        // function activePlace() {
+
+        //     let serchText = document.getElementById("ciyt_name");
+        //     let autocomplete = google.maps.places.Autocomplete(serchText);
+
+        //     console.log(autocomplete);
+        // }
+    </script>
+
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDITxS1C5G4ZvNcwMrLbrhKGrDv0oacTRA&libraries=places&callback=activePlace">
+    </script>
+</body>
+
+</html>
