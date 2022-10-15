@@ -76,7 +76,7 @@ http.createServer((req, res) => {
 
 
 
-fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Kolkata/?key=CPHC9J6WCKE4NYTHJMA3FKQMP')
+fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Jaipur/?key=CPHC9J6WCKE4NYTHJMA3FKQMP')
     .then(res => res.json())
     .then(text => {
 
